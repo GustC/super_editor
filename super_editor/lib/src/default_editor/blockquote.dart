@@ -272,7 +272,7 @@ ExecutionInstruction insertNewlineInBlockquote({
     return ExecutionInstruction.continueExecution;
   }
 
-  if (!HardwareKeyboard.instance.isShiftPressed) {
+  if (!HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift)) {
     return ExecutionInstruction.continueExecution;
   }
 

@@ -254,7 +254,7 @@ class RenderParagraphProseTextLayout implements ProseTextLayout {
     // to measure, but we may be able to use related metrics.
     if (_textLength == 0) {
       final estimatedLineHeight = _renderParagraph.getFullHeightForCaret(position);
-      return estimatedLineHeight * lineHeightMultiplier;
+      return (estimatedLineHeight??0) * lineHeightMultiplier;
     }
 
     // There is some text in this layout. Get the bounding box for the
@@ -324,7 +324,7 @@ class RenderParagraphProseTextLayout implements ProseTextLayout {
     final plainText = _richText.toPlainText();
     if (plainText.isEmpty) {
       final lineHeightEstimate = _renderParagraph.getFullHeightForCaret(const TextPosition(offset: 0));
-      return TextBox.fromLTRBD(0, 0, 0, lineHeightEstimate, TextDirection.ltr);
+      return TextBox.fromLTRBD(0, 0, 0, lineHeightEstimate ?? 0, TextDirection.ltr);
     }
 
     // Ensure that the given TextPosition does not exceed available text length.
