@@ -128,12 +128,12 @@ DocumentKeyboardAction ignoreKeyCombos(List<ShortcutActivator> keys) {
   return ({
     required SuperEditorContext editContext,
     required KeyEvent keyEvent,
-  }) {    
-    // for (final key in keys) {
-    //   if (key.accepts(keyEvent.logicalKey, RawKeyboard.instance)) {
-    //     return ExecutionInstruction.blocked;
-    //   }
-    // }
+  }) {
+    for (final key in keys) {
+      if (key.accepts(keyEvent, HardwareKeyboard.instance)) {
+        return ExecutionInstruction.blocked;
+      }
+    }
     return ExecutionInstruction.continueExecution;
   };
 }

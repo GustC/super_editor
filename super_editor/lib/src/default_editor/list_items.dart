@@ -1117,7 +1117,7 @@ ExecutionInstruction tabToIndentListItem({
   if (keyEvent.logicalKey != LogicalKeyboardKey.tab) {
     return ExecutionInstruction.continueExecution;
   }
-  if (HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift)) {
+  if (HardwareKeyboard.instance.isShiftPressed) {
     return ExecutionInstruction.continueExecution;
   }
 
@@ -1137,7 +1137,7 @@ ExecutionInstruction shiftTabToUnIndentListItem({
   if (keyEvent.logicalKey != LogicalKeyboardKey.tab) {
     return ExecutionInstruction.continueExecution;
   }
-  if (!HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift)) {
+  if (!HardwareKeyboard.instance.isShiftPressed) {
     return ExecutionInstruction.continueExecution;
   }
 

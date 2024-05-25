@@ -84,7 +84,7 @@ Future<void> main() async {
 
         // Press "a" + meta key
         fakeServicesBinding.fakeKeyboard.isMetaPressed = true;
-        expect(HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta), isTrue);
+        expect(HardwareKeyboard.instance.isMetaPressed, isTrue);
         result = anyCharacterToInsertInTextContent(
           editContext: editContext,
           keyEvent: const KeyDownEvent(

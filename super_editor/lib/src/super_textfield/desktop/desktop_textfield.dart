@@ -1870,11 +1870,11 @@ TextFieldKeyboardHandler ignoreTextFieldKeyCombos(List<ShortcutActivator> keys) 
     required SuperTextFieldContext textFieldContext,
     required KeyEvent keyEvent,
   }) {
-    // for (final key in keys) {
-    //   if (key.accepts(keyEvent, HardwareKeyboard.instance)) {
-    //     return TextFieldKeyboardHandlerResult.blocked;
-    //   }
-    // }
+    for (final key in keys) {
+      if (key.accepts(keyEvent, HardwareKeyboard.instance)) {
+        return TextFieldKeyboardHandlerResult.blocked;
+      }
+    }
     return TextFieldKeyboardHandlerResult.notHandled;
   };
 }
@@ -2035,7 +2035,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
     required KeyEvent keyEvent,
   }) {
     bool moveLeft = false;
-    if (!HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+    if (!HardwareKeyboard.instance.isControlPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
     if (defaultTargetPlatform != TargetPlatform.macOS) {
@@ -2096,12 +2096,12 @@ class DefaultSuperTextFieldKeyboardHandlers {
       return TextFieldKeyboardHandlerResult.handled;
     }
 
-    if (defaultTargetPlatform == TargetPlatform.windows && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.alt)) {
+    if (defaultTargetPlatform == TargetPlatform.windows && HardwareKeyboard.instance.isAltPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
     if (defaultTargetPlatform == TargetPlatform.linux &&
-        HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.alt) &&
+        HardwareKeyboard.instance.isAltPressed &&
         (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp || keyEvent.logicalKey == LogicalKeyboardKey.arrowDown)) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
@@ -2111,17 +2111,17 @@ class DefaultSuperTextFieldKeyboardHandlers {
 
       MovementModifier? movementModifier;
       if ((defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux) &&
-          HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+          HardwareKeyboard.instance.isControlPressed) {
         movementModifier = MovementModifier.word;
-      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta)) {
+      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.isMetaPressed) {
         movementModifier = MovementModifier.line;
-      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.alt)) {
+      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.isAltPressed) {
         movementModifier = MovementModifier.word;
       }
 
       textFieldContext.controller.moveCaretHorizontally(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveLeft: true,
         movementModifier: movementModifier,
       );
@@ -2130,17 +2130,17 @@ class DefaultSuperTextFieldKeyboardHandlers {
 
       MovementModifier? movementModifier;
       if ((defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux) &&
-          HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+          HardwareKeyboard.instance.isControlPressed) {
         movementModifier = MovementModifier.word;
-      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta)) {
+      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.isMetaPressed) {
         movementModifier = MovementModifier.line;
-      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.alt)) {
+      } else if (defaultTargetPlatform == TargetPlatform.macOS && HardwareKeyboard.instance.isAltPressed) {
         movementModifier = MovementModifier.word;
       }
 
       textFieldContext.controller.moveCaretHorizontally(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveLeft: false,
         movementModifier: movementModifier,
       );
@@ -2148,14 +2148,14 @@ class DefaultSuperTextFieldKeyboardHandlers {
       _log.finer('moveUpDownLeftAndRightWithArrowKeys - handling up arrow key');
       textFieldContext.controller.moveCaretVertically(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveUp: true,
       );
     } else if (keyEvent.logicalKey == LogicalKeyboardKey.arrowDown) {
       _log.finer('moveUpDownLeftAndRightWithArrowKeys - handling down arrow key');
       textFieldContext.controller.moveCaretVertically(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveUp: false,
       );
     }
@@ -2174,7 +2174,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
     if (keyEvent.logicalKey == LogicalKeyboardKey.home) {
       textFieldContext.controller.moveCaretHorizontally(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveLeft: true,
         movementModifier: MovementModifier.line,
       );
@@ -2195,7 +2195,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
     if (keyEvent.logicalKey == LogicalKeyboardKey.end) {
       textFieldContext.controller.moveCaretHorizontally(
         textLayout: textFieldContext.getTextLayout(),
-        expandSelection: HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.shift),
+        expandSelection: HardwareKeyboard.instance.isShiftPressed,
         moveLeft: false,
         movementModifier: MovementModifier.line,
       );
@@ -2212,7 +2212,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
     required SuperTextFieldContext textFieldContext,
     required KeyEvent keyEvent,
   }) {
-    if (HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta) || HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+    if (HardwareKeyboard.instance.isMetaPressed || HardwareKeyboard.instance.isControlPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
@@ -2307,7 +2307,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (keyEvent.logicalKey != LogicalKeyboardKey.backspace || !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.alt)) {
+    if (keyEvent.logicalKey != LogicalKeyboardKey.backspace || !HardwareKeyboard.instance.isAltPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
     if (textFieldContext.controller.selection.extentOffset < 0) {
@@ -2328,7 +2328,7 @@ class DefaultSuperTextFieldKeyboardHandlers {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (keyEvent.logicalKey != LogicalKeyboardKey.backspace || !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+    if (keyEvent.logicalKey != LogicalKeyboardKey.backspace || !HardwareKeyboard.instance.isControlPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
     if (textFieldContext.controller.selection.extentOffset < 0) {
@@ -2455,11 +2455,11 @@ class DefaultSuperTextFieldKeyboardHandlers {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (CurrentPlatform.isApple && !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta)) {
+    if (CurrentPlatform.isApple && !HardwareKeyboard.instance.isMetaPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (!CurrentPlatform.isApple && !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+    if (!CurrentPlatform.isApple && !HardwareKeyboard.instance.isControlPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
@@ -2487,11 +2487,11 @@ class DefaultSuperTextFieldKeyboardHandlers {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (CurrentPlatform.isApple && !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta)) {
+    if (CurrentPlatform.isApple && !HardwareKeyboard.instance.isMetaPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 
-    if (!CurrentPlatform.isApple && !HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control)) {
+    if (!CurrentPlatform.isApple && !HardwareKeyboard.instance.isControlPressed) {
       return TextFieldKeyboardHandlerResult.notHandled;
     }
 

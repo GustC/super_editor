@@ -34,8 +34,8 @@ enum ExecutionInstruction {
 
 extension PrimaryShortcutKey on KeyEvent {
   bool get isPrimaryShortcutKeyPressed =>
-      (CurrentPlatform.isApple && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.meta)) || //
-      (!CurrentPlatform.isApple && HardwareKeyboard.instance.logicalKeysPressed.contains(LogicalKeyboardKey.control));
+      (CurrentPlatform.isApple && HardwareKeyboard.instance.isMetaPressed) || //
+      (!CurrentPlatform.isApple && HardwareKeyboard.instance.isControlPressed);
 }
 
 /// Whether the given [character] should be ignored when it's received within
