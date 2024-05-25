@@ -40,6 +40,7 @@ dependencies:
   linkify: ^5.0.0
   logging: ^1.0.1
   uuid: ^4.0.0
+  web: ^0.5.1
 
   super_editor:
     git:
